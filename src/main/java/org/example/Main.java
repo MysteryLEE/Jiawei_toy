@@ -1,53 +1,35 @@
 package org.example;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Hello world!");
     }
 
-    public List<List<Integer>> threeSum(int[] nums) {
+    public int threeSumClosest(int[] nums, int target) {
         Arrays.sort(nums);
-        List<List<Integer>> answer = new ArrayList<>();
+        int closestSum = nums[0] + nums[1] + nums[2]; // Initialize closest sum with the sum of the first three elements
 
-        if (nums.length < 3) {
-            return answer;
-        }
+        for (int i = 0; i < nums.length - 2; i++) {
+            int j = i + 1;
+            int k = nums.length - 1;
 
-        for (int i = 0; i < nums.length; ++i) {
-            if (nums[i] > 0) {
-                break;
-            }
+            while (j < k) {
+                int sum = nums[i] + nums[j] + nums[k];
 
-            if (i > 0 && nums[i] == nums[i - 1]) {
-                continue;
-            }
+                if (Math.abs(target - sum) < Math.abs(target - closestSum)) {
+                    closestSum = sum; // Update closest sum if the current sum is closer to the target
+                }
 
-            int low = i + 1, high = nums.length - 1;
-            while (low < high) {
-                int sum = nums[i] + nums[low] + nums[high];
-                if (sum > 0) {
-                    high--;
-                } else if (sum < 0) {
-                    low++;
+                if (sum < target) {
+                    j++; // Increment j to increase the sum
                 } else {
-                    answer.add(Arrays.asList(nums[i], nums[low], nums[high]));
-                    int lastLowOccurrence = nums[low];
-                    int lastHighOccurrence = nums[high];
-
-                    while (low < high && nums[low] == lastLowOccurrence) {
-                        low++;
-                    }
-
-                    while (low < high && nums[high] == lastHighOccurrence) {
-                        high--;
-                    }
+                    k--; // Decrement k to decrease the sum
                 }
             }
         }
-        return answer;
+
+        return closestSum;
     }
 }
